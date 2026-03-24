@@ -14,11 +14,11 @@ Identify the most efficient and Hono-compatible methods for text extraction and 
 - **Secrets**: Patterns for AWS Keys (`AKIA...`), Slack Tokens, SSH Private Keys, and generic high-entropy strings.
 - **PII**: Emails, Phone Numbers (global patterns), and common credential keywords (password, secret, token).
 
-### 3. Risk Scoring (Risk Engine)
-- **Critical**: Hardcoded Private Keys, Active Cloud API Keys.
-- **High**: Passwords, Auth Tokens, Database Connection Strings.
-- **Medium**: Emails, Phone Numbers, User IDs.
-- **Low**: Suspicious log patterns (e.g., "login failed", "unauthorized").
+### 3. Risk Scoring (Context-Aware)
+- **High/Critical**: Sensitive data (Passwords, API Keys) found in sensitive contexts like `.log`, `.env`, or configuration files.
+- **Medium**: PII (Emails, Phone Numbers) found in structured logs or data exports.
+- **Low**: PII found in plain text docs or isolated suspicious patterns with low impact.
+- **Dynamic**: The `RiskEngine` will weigh the `PatternType` against the `SourceType`.
 
 ## Recommendations
 - Implement a `ScannerService` that uses a registry of `Pattern` objects.

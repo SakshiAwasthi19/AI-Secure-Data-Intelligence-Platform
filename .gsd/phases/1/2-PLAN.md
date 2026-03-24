@@ -23,7 +23,7 @@ Implement the severity scoring engine and expose the scanning functionality via 
     1. Evaluates a collection of `DetectionResults`.
     2. Calculates an overall `RiskScore` (Critical/High/High/Medium/Low).
     3. Provides a summary breakdown (e.g., "Found 2 Critical secrets, 5 High PII items").
-    Status: Use fixed mapping for MVP as decided in Phase discussion.
+    Status: Use context-aware scoring (Option B). Risk level depends on both pattern type AND input/file type (e.g., password in .log is High, email in .txt is Low).
   </action>
   <verify>Run unit tests with various finding counts and verify correct score output.</verify>
   <done>Scoring logic correctly prioritizes Critical/High findings in the final report.</done>
@@ -33,7 +33,7 @@ Implement the severity scoring engine and expose the scanning functionality via 
   <name>Expose Scanner via Hono API</name>
   <files>backend/src/index.ts, backend/src/routes/scan.ts</files>
   <action>
-    Setup a Hono app with a POST `/api/scan` endpoint.
+    Setup a Hono app with a POST `/api/analyze` endpoint.
     The endpoint should:
     1. Accept raw text or a JSON payload.
     2. Invoke the `ScannerService`.
