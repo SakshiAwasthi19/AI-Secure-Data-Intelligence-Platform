@@ -1,39 +1,41 @@
 import { DetectionResult, RiskReport, Severity, SourceType } from './types';
 
 /**
- * Evaluates a collection of DetectionResults and generates a structured RiskReport.
+ * Aggregates individual detection results into a structured RiskReport.
  */
 export function generateRiskReport(findings: DetectionResult[], sourceType: SourceType): RiskReport {
-  const counts = {
-    critical: findings.filter(f => f.severity === 'Critical').length,
-    high: findings.filter(f => f.severity === 'High').length,
-    medium: findings.filter(f => f.severity === 'Medium').length,
-    low: findings.filter(f => f.severity === 'Low').length
+  const summary = {
+    criticalCount: findings.filter(f => f.severity === 'Critical').length,
+    highCount: findings.filter(f => f.severity === 'High').length,
+    mediumCount: findings.filter(f => f.severity === 'Medium').length,
+    lowCount: findings.filter(f => f.severity === 'Low').length
   };
 
-  const overallSeverity = calculateOverallSeverity(counts);
+  const totalFindings = findings.length;
+  const overallSeverity = calculateOverallSeverity(summary);
 
   return {
     timestamp: new Date().toISOString(),
     sourceType,
-    totalFindings: findings.length,
+    totalFindings,
     findings,
-    summary: {
-      criticalCount: counts.critical,
-      highCount: counts.high,
-      mediumCount: counts.medium,
-      lowCount: counts.low
-    },
+    summary,
     overallSeverity
   };
 }
 
 /**
- * Determines the overall severity of a report based on the maximum severity found.
+ * Determines the highest severity level present in the findings.
  */
-function calculateOverallSeverity(counts: { critical: number; high: number; medium: number; low: number }): Severity {
-  if (counts.critical > 0) return 'Critical';
-  if (counts.high > 0) return 'High';
-  if (counts.medium > 0) return 'Medium';
-  return 'Low';
+function calculateOverallSeverity(summary: { 
+  criticalCount: number; 
+  highCount: number; 
+  mediumCount: number; 
+  lowCount: number; 
+}): Severity {
+  if (summary.criticalCount > 0) return 'Critical';
+  if (summary.highCount > 0) return 'High';
+  if (summary.mediumCount > 0) return 'Medium';
+  if (summary.lowCount > 0) return 'Low';
+  return 'Low'; // Default for no findings
 }
