@@ -31,7 +31,7 @@ Implement the severity scoring engine and expose the scanning functionality via 
 
 <task type="auto">
   <name>Expose Scanner via Hono API</name>
-  <files>backend/src/index.ts, backend/src/routes/scan.ts</files>
+  <files>backend/src/index.ts, backend/src/routes/analyze.ts</files>
   <action>
     Setup a Hono app with a POST `/api/analyze` endpoint.
     The endpoint should:
