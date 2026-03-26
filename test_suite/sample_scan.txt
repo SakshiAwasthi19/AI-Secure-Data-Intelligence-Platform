@@ -1,0 +1,17 @@
+# Sample Security Scan Test File
+
+This file contains several sensitive data patterns for testing the SECURESCAN engine.
+
+## PII Data
+- Name: John Doe
+- Email: john.doe.test@example.com
+- Phone: +1 (555) 010-9988
+
+## Credentials & Secrets
+- AWS Access Key: [REDACTED_AWS_KEY]
+- AWS Secret Key: [REDACTED_AWS_SECRET]
+- Slack Webhook: https://hooks.slack.com/services/REDACTED/REDACTED/REDACTED
+- Generic API Key: REDACTED-KEY-12345
+
+## Conclusion
+The scanner should identify at least 5-6 distinct findings in this file.
