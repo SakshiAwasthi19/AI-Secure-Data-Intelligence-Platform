@@ -11,3 +11,11 @@
 # OS generated
 Thumbs.db
 .DS_Store
+
+# Dependencies and Build Artifacts
+node_modules/
+.next/
+dist/
+build/
+.env*
+*.log
