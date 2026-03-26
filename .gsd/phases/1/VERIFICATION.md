@@ -9,13 +9,14 @@
 ## Verdict: PASS
 
 ### Evidence
-- **Automated Tests**: Passed 4/4 core tests via `npm test`.
-- **Manual Verification**: Verified `POST /api/analyze` returns correct JSON with severity escalation for log files.
+- **Automated Tests**: Passed 9/9 core and scoring tests via `npm test`.
+- **Manual Verification**: Verified `POST /api/analyze` returns correct JSON with severity escalation for log files (AWS Key in Log -> Critical).
 
 ### Evidence Snippet (API Response)
 ```json
 {
-  "overallSeverity": "Critical",
+  "timestamp": "2026-03-24T12:52:20.390Z",
+  "sourceType": "log",
   "totalFindings": 1,
   "findings": [
     {
@@ -23,6 +24,7 @@
       "severity": "Critical",
       "matchedText": "AKIA1234567890ABCDEF"
     }
-  ]
+  ],
+  "overallSeverity": "Critical"
 }
 ```

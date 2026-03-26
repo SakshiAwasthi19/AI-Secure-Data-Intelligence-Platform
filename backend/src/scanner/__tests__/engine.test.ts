@@ -18,9 +18,9 @@ describe('Scanner Engine', () => {
   it('should detect Email Addresses with context-aware severity', () => {
     const text = 'Contact me at test@example.com';
     
-    // In logs -> Medium
+    // In logs -> Low (was Medium)
     const logResults = scanText(text, 'log');
-    assert.strictEqual(logResults[0].severity, 'Medium');
+    assert.strictEqual(logResults[0].severity, 'Low');
     
     // In plain text -> Low
     const textResults = scanText(text, 'text');
@@ -46,5 +46,25 @@ Line 3`;
     const ids = results.map(r => r.patternId);
     assert.ok(ids.includes('aws-access-key'));
     assert.ok(ids.includes('email-address'));
+  });
+  
+  it('should detect generic API keys and tokens', () => {
+    const text = 'api_key="sk-1234567890abcdef1234567890abcdef" and bearer abcdef1234567890abcdef1234567890';
+    const results = scanText(text, 'code');
+    
+    assert.strictEqual(results.length, 2);
+    assert.strictEqual(results[0].patternId, 'generic-api-key');
+    assert.strictEqual(results[1].patternId, 'generic-api-key');
+    assert.strictEqual(results[0].severity, 'High');
+  });
+
+  it('should detect credit card numbers', () => {
+    const text = 'Visa: 4111111111111111, Master: 5100000000000000';
+    const results = scanText(text, 'text');
+    
+    assert.strictEqual(results.length, 2);
+    assert.strictEqual(results[0].patternId, 'credit-card');
+    assert.strictEqual(results[1].patternId, 'credit-card');
+    assert.strictEqual(results[0].severity, 'High');
   });
 });

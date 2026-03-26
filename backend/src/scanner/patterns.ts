@@ -34,6 +34,14 @@ export const SCANNER_PATTERNS: ScannerPattern[] = [
     description: 'Slack API or Bot Token',
     baselineSeverity: 'Critical'
   },
+  {
+    id: 'generic-api-key',
+    name: 'Generic API Key / Token',
+    regex: /(?:api_key|token|access_token)[:=]\s*["']?([a-zA-Z0-9._-]{16,})["']?|bearer\s+[a-zA-Z0-9._-]{16,}/gi,
+    category: 'Secret',
+    description: 'Generic pattern catching api_key=xxxx, token=xxxx, etc.',
+    baselineSeverity: 'High'
+  },
 
   // PII
   {
@@ -42,7 +50,15 @@ export const SCANNER_PATTERNS: ScannerPattern[] = [
     regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
     category: 'PII',
     description: 'Generic email metadata',
-    baselineSeverity: 'Medium'
+    baselineSeverity: 'Low'
+  },
+  {
+    id: 'credit-card',
+    name: 'Credit Card Number',
+    regex: /\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|2(?:2(?:2[1-9]|[3-9][0-9])|[3-6][0-9][0-9]|7(?:[01][0-9]|20))[0-9]{12}|3[47][0-9]{13})\b/g,
+    category: 'PII',
+    description: 'Visa, Mastercard, or Amex credit card formats',
+    baselineSeverity: 'High'
   },
   {
     id: 'phone-number',

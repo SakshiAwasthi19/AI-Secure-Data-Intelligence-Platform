@@ -1,8 +1,8 @@
-export type Severity = 'Critical' | 'High' | 'Medium' | 'Low';
+export type Severity = 'Critical' | 'High' | 'Medium' | 'Low' | 'None';
 
 export type PatternCategory = 'Secret' | 'PII' | 'Credential' | 'LogPattern';
 
-export type SourceType = 'log' | 'text' | 'env' | 'code' | 'config';
+export type SourceType = 'log' | 'text' | 'env' | 'code' | 'config' | 'sql' | 'chat';
 
 export interface ScannerPattern {
   id: string;

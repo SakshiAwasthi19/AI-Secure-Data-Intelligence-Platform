@@ -31,10 +31,10 @@ describe('Scoring Engine', () => {
     assert.strictEqual(report.summary.mediumCount, 1);
   });
 
-  it('should generate a report with Low overall severity if no findings are present', () => {
+  it('should generate a report with None overall severity if no findings are present', () => {
     const report = generateRiskReport([], 'text');
     
-    assert.strictEqual(report.overallSeverity, 'Low');
+    assert.strictEqual(report.overallSeverity, 'None');
     assert.strictEqual(report.totalFindings, 0);
   });
 });

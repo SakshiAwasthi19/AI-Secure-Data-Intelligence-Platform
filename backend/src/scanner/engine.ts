@@ -78,7 +78,7 @@ function extractContext(text: string, start: number, end: number, padding: numbe
 /**
  * Logic for context-aware severity (Option B as requested by user).
  */
-function calculateSeverity(pattern: ScannerPattern, sourceType: SourceType): Severity {
+export function calculateSeverity(pattern: ScannerPattern, sourceType: SourceType): Severity {
   const baseline = pattern.baselineSeverity;
 
   // High-risk patterns in sensitive environments
@@ -88,8 +88,8 @@ function calculateSeverity(pattern: ScannerPattern, sourceType: SourceType): Sev
     return baseline;
   }
 
-  // PII in plain text documents is lower risk
-  if (sourceType === 'text' && pattern.category === 'PII') {
+  // PII in plain text documents is lower risk, unless it's high severity (like credit cards)
+  if (sourceType === 'text' && pattern.category === 'PII' && baseline !== 'High' && baseline !== 'Critical') {
     return 'Low';
   }
 

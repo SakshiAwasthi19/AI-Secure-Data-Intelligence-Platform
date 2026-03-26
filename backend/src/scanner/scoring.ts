@@ -37,5 +37,5 @@ function calculateOverallSeverity(summary: {
   if (summary.highCount > 0) return 'High';
   if (summary.mediumCount > 0) return 'Medium';
   if (summary.lowCount > 0) return 'Low';
-  return 'Low'; // Default for no findings
+  return 'None'; // Default for no findings
 }
