@@ -28,15 +28,15 @@
 - [x] Display basic scan results (findings list, risk level, risk badges)
 
 ### Phase 3: AI Insights & Reporting
-**Status**: ⬜ Not Started
-**Objective**: Integrate Gemini Flash for analysis and build the final report UI.
+**Status**: 📝 Planning
+**Objective**: Integrate Gemini Flash for analysis and build the Policy Engine.
 **Requirements**:
 - [ ] `.env` setup with `GEMINI_API_KEY` and `@google/generative-ai` installation
-- [ ] AI Module (`backend/src/ai/gemini.ts`) for summary, anomalies, and risk callouts
-- [ ] Gemini-powered analysis for Log Analyzer findings (anomalies, risks, and specific callouts)
-- [ ] Policy Engine: Masking (High), Blocking (Critical), and Response Actions
+- [ ] Privacy-First Masking (`backend/src/utils/masking.ts`): Mask regex findings before sending to AI
+- [ ] AI Module (`backend/src/ai/gemini.ts`): overall summary, anomalies, and risk callouts using `gemini-1.5-flash`
+- [ ] Policy Engine: Support `options` field for Masking and Non-Blocking (`action: "blocked"` in JSON)
 - [ ] Full API response shape: summary, findings, risk_score, risk_level, action, insights, content_type
-- [ ] Insights Panel on frontend with AI-generated summary and security warnings
+- [ ] UI: AI Insights Summary Card prominently displayed at the top of results
 
 ### Phase 4: Polish & Security hardening
 **Status**: ⬜ Not Started
