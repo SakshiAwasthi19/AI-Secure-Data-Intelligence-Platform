@@ -26,6 +26,14 @@ Implement the privacy-first masking utility and standardize the `POST /api/analy
   <done>Utility correctly replaces matched text with placeholders.</done>
 </task>
 
+### 2. Gemini Flash Integration with Fallback
+- **Model**: `gemini-1.5-flash`.
+- **Fallback**: If the API fails, times out, **OR if the `GEMINI_API_KEY` is missing**, return:
+    - `summary`: "AI insights unavailable"
+    - `anomalies`: []
+    - `risks`: []
+- **Silent Behavior**: Missing API key = same behaviour as Gemini timeout or failure. Silent fallback, request still completes successfully.
+
 <task type="auto">
   <name>Standardize API Response Shape</name>
   <files>backend/src/routes/analyze.ts, backend/src/scanner/scoring.ts</files>

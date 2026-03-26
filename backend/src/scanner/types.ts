@@ -31,11 +31,16 @@ export interface RiskReport {
   sourceType: SourceType;
   totalFindings: number;
   findings: DetectionResult[];
-  summary: {
+  summary: string; // Changed from object to string for Phase 3
+  risk_score: number;
+  risk_level: Severity;
+  action: 'blocked' | 'masked' | 'allowed';
+  insights: string[];
+  content_type: string;
+  stats: { // Moved counts here to keep summary as a string
     criticalCount: number;
     highCount: number;
     mediumCount: number;
     lowCount: number;
   };
-  overallSeverity: Severity;
 }

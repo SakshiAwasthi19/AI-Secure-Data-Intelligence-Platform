@@ -3,6 +3,7 @@
 import React from 'react';
 import { Shield, AlertTriangle, Info, CheckCircle, ShieldCheck, FileSearch, Hash } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import AIInsightsCard from './AIInsightsCard';
 
 interface Finding {
   patternId: string;
@@ -20,7 +21,18 @@ interface ResultsDisplayProps {
     sourceType: string;
     totalFindings: number;
     findings: Finding[];
-    overallSeverity: 'Critical' | 'High' | 'Medium' | 'Low' | 'None';
+    summary: string;
+    risk_score: number;
+    risk_level: 'Critical' | 'High' | 'Medium' | 'Low' | 'None';
+    action: 'blocked' | 'masked' | 'allowed';
+    insights: string[];
+    content_type: string;
+    stats: {
+      criticalCount: number;
+      highCount: number;
+      mediumCount: number;
+      lowCount: number;
+    };
   } | null;
 }
 
@@ -52,22 +64,31 @@ export default function ResultsDisplay({ results }: ResultsDisplayProps) {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Risk Summary Card */}
+      {/* AI Insights Summary Card (Phase 3) */}
+      <AIInsightsCard 
+        summary={results.summary}
+        insights={results.insights}
+        riskScore={results.risk_score}
+        riskLevel={results.risk_level}
+        action={results.action}
+      />
+
+      {/* Risk Overview */}
       <div className={cn(
         "p-6 rounded-2xl flex items-center justify-between shadow-lg text-white",
-        results.overallSeverity === 'Critical' ? "bg-gradient-to-br from-red-600 to-rose-700" :
-        results.overallSeverity === 'High' ? "bg-gradient-to-br from-orange-500 to-amber-600" :
-        results.overallSeverity === 'Medium' ? "bg-gradient-to-br from-amber-400 to-orange-400 text-slate-900" :
-        results.overallSeverity === 'Low' ? "bg-gradient-to-br from-blue-500 to-indigo-600" :
+        results.risk_level === 'Critical' ? "bg-gradient-to-br from-red-600 to-rose-700" :
+        results.risk_level === 'High' ? "bg-gradient-to-br from-orange-500 to-amber-600" :
+        results.risk_level === 'Medium' ? "bg-gradient-to-br from-amber-400 to-orange-400 text-slate-900" :
+        results.risk_level === 'Low' ? "bg-gradient-to-br from-blue-500 to-indigo-600" :
         "bg-gradient-to-br from-emerald-500 to-teal-600"
       )}>
         <div className="flex items-center space-x-4">
           <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-            {severityIcons[results.overallSeverity]}
+            {severityIcons[results.risk_level]}
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider opacity-80 mb-0.5">Overall Security Risk</p>
-            <h2 className="text-3xl font-black tracking-tight">{results.overallSeverity}</h2>
+            <h2 className="text-3xl font-black tracking-tight">{results.risk_level}</h2>
           </div>
         </div>
         <div className="text-right">

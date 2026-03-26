@@ -4,19 +4,23 @@ import { generateRiskReport } from '../scanner/scoring';
 import { SourceType } from '../scanner/types';
 import { extractTextFromFile } from '../utils/extractor';
 import { analyzeLog } from '../logAnalyzer';
+import { maskSensitiveData } from '../utils/masking';
+import { getSecurityInsights } from '../ai/gemini';
 
 const analyze = new Hono();
 
 analyze.post('/', async (c) => {
   let text = '';
   let sourceType: SourceType = 'text';
+  let options = { mask: false, block_high_risk: false };
 
   const contentType = c.req.header('Content-Type');
 
   if (contentType?.includes('multipart/form-data')) {
     const body = await c.req.parseBody();
-    const file = body['file'];
     
+    // Parse File or Text
+    const file = body['file'];
     if (file instanceof File) {
       text = await extractTextFromFile(file);
       const ext = file.name.split('.').pop()?.toLowerCase();
@@ -24,15 +28,24 @@ analyze.post('/', async (c) => {
     } else if (typeof body['text'] === 'string') {
       text = body['text'];
     }
-    
+
+    // Parse SourceType override
     if (typeof body['sourceType'] === 'string') {
       sourceType = body['sourceType'] as SourceType;
     }
+
+    // Parse Options
+    options.mask = String(body['mask']) === 'true';
+    options.block_high_risk = String(body['block_high_risk']) === 'true';
   } else {
     try {
       const body = await c.req.json();
       text = body.text;
       sourceType = (body.sourceType as SourceType) || 'text';
+      options = {
+        mask: body.mask === true,
+        block_high_risk: body.block_high_risk === true
+      };
     } catch (err) {
       text = await c.req.text();
     }
@@ -42,11 +55,24 @@ analyze.post('/', async (c) => {
     return c.json({ error: 'No text or file provided for analysis' }, 400);
   }
 
+  // 1. Scan for patterns
   const findings = sourceType === 'log' 
     ? analyzeLog(text, sourceType) 
     : scanText(text, sourceType);
 
-  const report = generateRiskReport(findings, sourceType);
+  // 2. Generate baseline report
+  const report = generateRiskReport(findings, sourceType, options);
+
+  // 3. AI Insights (Plan 3.2)
+  // Privacy-first: Mask text before sending to Gemini
+  const maskedText = maskSensitiveData(text, findings);
+  
+  // Get AI generation (with silent fallback if key missing or service down)
+  const aiInsights = await getSecurityInsights(maskedText);
+  
+  // Augment report with AI findings
+  report.summary = aiInsights.summary;
+  report.insights = aiInsights.risks; // Map Gemini risks to API insights
 
   return c.json(report);
 });

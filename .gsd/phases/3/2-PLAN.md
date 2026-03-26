@@ -22,10 +22,10 @@ Integrate `gemini-1.5-flash` to provide security insights and handle API failure
   <action>
     - Install `@google/generative-ai`.
     - Create `getSecurityInsights(maskedText: string)` using `gemini-1.5-flash`.
-    - Implement a try/catch block to return: `summary: "AI insights unavailable", anomalies: [], risks: []` on failure.
+    - Implement a try/catch block and environment check to return: `summary: "AI insights unavailable", anomalies: [], risks: []` on failure or if `GEMINI_API_KEY` is missing.
   </action>
-  <verify>Verify generated insights via API call (with a mock key first if needed).</verify>
-  <done>AI module returns valid insights or graceful fallback.</done>
+  <verify>Verify generated insights via API call (with and without key).</verify>
+  <done>AI module returns valid insights or silent fallback without crashing.</done>
 </task>
 
 <task type="auto">
