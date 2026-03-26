@@ -13,34 +13,29 @@ export interface AISecurityInsights {
  * Fallback values used when Gemini is unavailable or errors out.
  */
 const DEFAULT_FALLBACK: AISecurityInsights = {
-  summary: 'AI insights unavailable',
+  summary: 'AI insights unavailable — check your GEMINI_API_KEY in backend/.env',
   anomalies: [],
   risks: []
 };
 
 /**
- * Uses Gemini 1.5 Flash to generate security insights from redacted scan text.
- * Strictly adheres to silent fallback requirements.
- * 
- * @param maskedText The redacted text (no real secrets)
- * @returns Structured security insights or fallback
+ * Uses Gemini 2.0 Flash to generate security insights from redacted scan text.
+ * Falls back gracefully on any error (missing key, rate limit, network issue).
  */
 export async function getSecurityInsights(maskedText: string): Promise<AISecurityInsights> {
   const apiKey = process.env.GEMINI_API_KEY;
 
-  if (!apiKey || apiKey === '') {
-    console.warn('[AI] GEMINI_API_KEY is REDACTED or MISSING from process.env. Current keys:', Object.keys(process.env).filter(k => k.includes('GEMINI')));
+  if (!apiKey || apiKey.trim() === '') {
+    console.warn('[AI] GEMINI_API_KEY is missing. AI insights will be unavailable.');
     return DEFAULT_FALLBACK;
   }
 
-  console.log('[AI] GEMINI_API_KEY found (length: ' + apiKey.length + '). Calling Gemini...');
+  console.log('[AI] Calling Gemini 2.0 Flash (Key: ' + apiKey.substring(0, 7) + '...)');
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    
-    // Configure JSON response schema
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       generationConfig: {
         responseMimeType: 'application/json',
         responseSchema: {
@@ -57,15 +52,28 @@ export async function getSecurityInsights(maskedText: string): Promise<AISecurit
     });
 
     const result = await model.generateContent(
-      `Please analyze the following redacted scan results and provide insights in JSON format:\n\n${maskedText}`
+      `Analyze these redacted scan results and provide insights in JSON:\n\n${maskedText}`
     );
 
     const responseText = result.response.text();
     return JSON.parse(responseText) as AISecurityInsights;
 
-  } catch (error) {
-    console.error('[AI] Gemini analysis failed:', error);
-    // Silent fallback on any error/timeout
+  } catch (error: any) {
+    const msg = error.message || String(error);
+    console.error('[AI] Gemini request failed:', msg);
+
+    // Provide specific hints based on error type
+    if (msg.includes('429') || msg.includes('rate limit') || msg.includes('quota')) {
+      console.warn('[AI] Rate limit hit. Please wait a moment and try again.');
+      return { summary: 'AI temporarily unavailable — rate limit reached. Please retry in a few seconds.', anomalies: [], risks: [] };
+    }
+    if (msg.includes('404')) {
+      console.error('[AI] Model not found. The Gemini model may not be available for your API key.');
+    }
+    if (msg.includes('API key not valid') || msg.includes('400')) {
+      console.error('[AI] Invalid API key. Please check your GEMINI_API_KEY in backend/.env');
+    }
+
     return DEFAULT_FALLBACK;
   }
 }

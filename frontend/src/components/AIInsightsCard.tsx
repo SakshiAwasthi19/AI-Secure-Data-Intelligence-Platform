@@ -37,7 +37,7 @@ export default function AIInsightsCard({ summary, insights, riskScore, riskLevel
                   </span>
                 )}
               </div>
-              <p className="text-xs font-medium text-slate-400 uppercase tracking-widest">Analysis by Gemini Flash 1.5</p>
+              <p className="text-xs font-medium text-slate-400 uppercase tracking-widest">Analysis by Gemini 2.0 Flash</p>
             </div>
           </div>
 
