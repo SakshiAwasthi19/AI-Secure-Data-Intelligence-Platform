@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/screenshots/homepage.png" alt="SecureScan Homepage" width="100%">
+  <img src="assets/screenshots/homepage.png" alt="SecureScan Homepage" width="100%">
 </p>
 
 <h1 align="center">🛡️ AI Secure Data Intelligence Platform</h1>
@@ -21,10 +21,10 @@
 ## 📸 Screenshots
 
 ### Homepage — Clean Input Interface
-![SecureScan Homepage](docs/screenshots/homepage.png)
+![SecureScan Homepage](assets/screenshots/homepage.png)
 
 ### Scan Results — Full Analysis Dashboard
-![Scan Results](docs/screenshots/scan-results.png)
+![Scan Results](assets/screenshots/scan-results.png)
 
 ---
 
