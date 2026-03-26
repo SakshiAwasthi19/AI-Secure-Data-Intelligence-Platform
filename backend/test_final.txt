@@ -1,0 +1,37 @@
+TAP version 13
+# Subtest: Scanner Engine
+    # Subtest: should detect AWS Access Keys
+    ok 1 - should detect AWS Access Keys
+      ---
+      duration_ms: 4.3485
+      ...
+    # Subtest: should detect Email Addresses with context-aware severity
+    ok 2 - should detect Email Addresses with context-aware severity
+      ---
+      duration_ms: 2.3504
+      ...
+    # Subtest: should correctly report line numbers
+    ok 3 - should correctly report line numbers
+      ---
+      duration_ms: 0.4135
+      ...
+    # Subtest: should detect multiple different patterns
+    ok 4 - should detect multiple different patterns
+      ---
+      duration_ms: 0.5702
+      ...
+    1..4
+ok 1 - Scanner Engine
+  ---
+  duration_ms: 14.7658
+  type: 'suite'
+  ...
+1..1
+# tests 4
+# suites 1
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1050.8863
