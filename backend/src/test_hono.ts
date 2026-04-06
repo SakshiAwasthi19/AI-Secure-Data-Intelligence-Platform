@@ -1,6 +1,7 @@
+import process from 'node:process';
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
-import analyze from './src/routes/analyze';
+import analyze from './routes/analyze';
 
 const app = new Hono();
 app.get('/', (c) => c.text('Hello Hono!'));

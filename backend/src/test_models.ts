@@ -1,3 +1,4 @@
+import process from 'node:process';
 import 'dotenv/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 

@@ -1,3 +1,4 @@
+import process from 'node:process';
 import 'dotenv/config';
 
 const apiKey = process.env.GEMINI_API_KEY;
